@@ -1,10 +1,12 @@
 import { useMemo, useState } from "react";
+import { QuitModal, ResultModal } from "./components/modal";
+import { BoardStateType, PlayerStateType } from "./interfaces";
 
 function App() {
   const [board, setBoard] = useState<BoardStateType[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStateType>("X");
   const [winner, setWinner] = useState<BoardStateType>(null);
-  const [playersName, setPlayersName] = useState<PlayersNameStateType>(null);
+  const [isTie, setIsTie] = useState<boolean>(false);
 
   const winningCombos = useMemo(
     () => [
@@ -30,25 +32,28 @@ function App() {
     );
 
     if (winningCombo) setWinner(currentPlayer);
-    else if (!board.includes(null)) setWinner(null);
+    else if (!board.includes(null)) setIsTie(true);
     else setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
   };
 
   const resetGame = () => {
     setBoard(Array(9).fill(null));
     setCurrentPlayer("X");
+    setIsTie(false);
     setWinner(null);
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-indigo-500 to-purple-700">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+        <div className="absolute top-4 right-4">
+          <QuitModal />
+        </div>
         <h1 className="text-3xl font-bold text-center mb-8">Tic-Tac-Toe</h1>
         <div className="grid grid-cols-3 gap-4">
           {board.map((cell, index) => (
             <button
               key={index}
-              disabled={winner ? true : board[index] ? true : false}
               className={`w-full h-20 font-bold text-4xl rounded-md transition-colors duration-300 ${
                 cell === "X"
                   ? "text-indigo-500 bg-indigo-100"
@@ -62,18 +67,10 @@ function App() {
             </button>
           ))}
         </div>
-        {winner && (
-          <div className="mt-8 text-center">
-            <p className="text-2xl font-bold mb-4">
-              {winner === null ? "It's a tie!" : `Player ${winner} wins!`}
-            </p>
-            <button
-              className="px-6 py-3 bg-indigo-500 text-white rounded-md shadow-md hover:bg-indigo-600 transition-colors duration-300"
-              onClick={resetGame}
-            >
-              Play Again
-            </button>
-          </div>
+        {isTie || winner ? (
+          <ResultModal resetGame={resetGame} isTie={isTie} winner={winner} />
+        ) : (
+          ""
         )}
       </div>
     </div>

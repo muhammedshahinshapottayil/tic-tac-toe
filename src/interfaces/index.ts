@@ -1,3 +1,7 @@
-type PlayerStateType = "X" | "O";
-type PlayersNameStateType = { X: string; O: string } | null;
-type BoardStateType = PlayerStateType | null;
+export type PlayerStateType = "X" | "O";
+export type BoardStateType = PlayerStateType | null;
+export type ResultModalProps = {
+  winner: BoardStateType;
+  resetGame: () => void;
+  isTie: boolean;
+};

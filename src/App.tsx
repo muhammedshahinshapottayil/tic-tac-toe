@@ -46,9 +46,9 @@ function App() {
     setAutoPlay(false);
   };
 
-  const handleAutoPlay = () => {
+  const handleAutoPlay = (status: boolean) => {
     resetGame();
-    setAutoPlay((state) => !state);
+    setAutoPlay(status);
   };
 
   return (
@@ -83,7 +83,7 @@ function App() {
           <input
             type="checkbox"
             checked={autoPlay}
-            onChange={handleAutoPlay}
+            onChange={(e) => handleAutoPlay(e.target.checked)}
             className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out sm:h-5 sm:w-5"
           />
           <ResetButton text="Reset" isReset={true} resetGame={resetGame} />

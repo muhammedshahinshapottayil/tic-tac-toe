@@ -58,7 +58,7 @@ function App() {
     if (!isAuto && !winningCombo && autoPlay)
       setTimeout(() => {
         autoSelectAction(index);
-      }, 500);
+      }, 300);
   };
 
   const resetGame = () => {

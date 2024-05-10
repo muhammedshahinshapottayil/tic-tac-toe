@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { QuitModal, ResultModal } from "./components/modal";
 import { BoardStateType, PlayerStateType } from "./interfaces";
 import { ResetButton } from "./components/button";
+import { getRandomArray, getRandomInt } from "./utils";
 
 function App() {
   const [board, setBoard] = useState<BoardStateType[]>(Array(9).fill(null));
@@ -24,18 +25,40 @@ function App() {
     []
   );
 
-  const handleClick = (index: number) => {
-    if (board[index] || winner) return;
+  const autoSelectAction = (index: number): void => {
+    const slotArr = winningCombos.reduce(
+      (prev: number[], comboArr: number[]) => {
+        if (comboArr.includes(index)) {
+          const availableSlot = comboArr.filter((item) => board[item] === null);
+          if (availableSlot.length > 0) prev = [...prev, ...availableSlot];
+        }
+        return prev;
+      },
+      []
+    );
+    const randomArr = getRandomArray(0, 100, getRandomInt(0, 100));
+    const randomNo = getRandomInt(0, 100);
+    const selectedNo = randomNo % randomArr.length;
+    handleBoxClick(slotArr[selectedNo % slotArr.length], true);
+  };
 
-    board[index] = currentPlayer;
+  const handleBoxClick = (index: number, isAuto?: boolean) => {
+    if (board[index] || winner) return;
+    const currentUser = !autoPlay ? currentPlayer : isAuto ? "O" : "X";
+    board[index] = currentUser;
     setBoard([...board]);
     const winningCombo = winningCombos.find((comboArr) =>
-      comboArr.every((indexNumber) => board[indexNumber] === currentPlayer)
+      comboArr.every((indexNumber) => board[indexNumber] === currentUser)
     );
 
-    if (winningCombo) setWinner(currentPlayer);
+    if (winningCombo) setWinner(currentUser);
     else if (!board.includes(null)) setIsTie(true);
-    else setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+    else !autoPlay && setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+
+    if (!isAuto && !winningCombo && autoPlay)
+      setTimeout(() => {
+        autoSelectAction(index);
+      }, 500);
   };
 
   const resetGame = () => {
@@ -69,7 +92,7 @@ function App() {
                   ? "text-purple-500 bg-purple-100"
                   : "text-gray-400 bg-gray-100 hover:bg-gray-200"
               }`}
-              onClick={() => handleClick(index)}
+              onClick={() => handleBoxClick(index)}
             >
               {value}
             </button>

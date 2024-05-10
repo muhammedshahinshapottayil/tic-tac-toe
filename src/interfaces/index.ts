@@ -5,3 +5,8 @@ export type ResultModalProps = {
   resetGame: () => void;
   isTie: boolean;
 };
+export type ResetButtonType = {
+  resetGame: () => void;
+  text: string;
+  isReset: boolean;
+};

@@ -32,7 +32,7 @@ const QuitModal = () => {
   return (
     <div>
       <button
-        className="px-6 py-3 font-semibold bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-colors duration-300"
+        className="px-4 py-2 font-semibold bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 transition-colors duration-300"
         onClick={handleModal}
       >
         Quit

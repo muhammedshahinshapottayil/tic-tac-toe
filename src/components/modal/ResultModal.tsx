@@ -1,6 +1,7 @@
 import Modal from "react-modal";
 import QuitModal from "./QuitModal";
 import { ResultModalProps } from "../../interfaces";
+import { ResetButton } from "../button";
 
 Modal.setAppElement("#root");
 
@@ -36,12 +37,12 @@ const ResultModal = ({ winner, resetGame, isTie }: ResultModalProps) => {
           </p>
         )}
         <div className="flex justify-center space-x-4">
-          <button
-            className="px-6 py-3 font-semibold bg-indigo-500 text-white rounded-md shadow-md hover:bg-indigo-600 transition-colors duration-300"
-            onClick={resetGame}
-          >
-            Play Again
-          </button>
+          <ResetButton
+            isReset={false}
+            resetGame={resetGame}
+            text="Play Again"
+          />
+
           <QuitModal />
         </div>
       </div>

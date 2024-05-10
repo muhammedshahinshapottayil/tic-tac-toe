@@ -1,12 +1,14 @@
 import { useMemo, useState } from "react";
 import { QuitModal, ResultModal } from "./components/modal";
 import { BoardStateType, PlayerStateType } from "./interfaces";
+import { ResetButton } from "./components/button";
 
 function App() {
   const [board, setBoard] = useState<BoardStateType[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStateType>("X");
   const [winner, setWinner] = useState<BoardStateType>(null);
   const [isTie, setIsTie] = useState<boolean>(false);
+  const [autoPlay, setAutoPlay] = useState<boolean>(false);
 
   const winningCombos = useMemo(
     () => [
@@ -41,6 +43,12 @@ function App() {
     setCurrentPlayer("X");
     setIsTie(false);
     setWinner(null);
+    setAutoPlay(false);
+  };
+
+  const handleAutoPlay = () => {
+    resetGame();
+    setAutoPlay((state) => !state);
   };
 
   return (
@@ -67,6 +75,20 @@ function App() {
             </button>
           ))}
         </div>
+
+        <div className="mt-3 flex justify-end items-center gap-1 sm:gap-2">
+          <span className="ml-2 text-xs text-gray-600 font-medium sm:text-sm">
+            Auto play
+          </span>
+          <input
+            type="checkbox"
+            checked={autoPlay}
+            onChange={handleAutoPlay}
+            className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out sm:h-5 sm:w-5"
+          />
+          <ResetButton text="Reset" isReset={true} resetGame={resetGame} />
+        </div>
+
         <ResultModal resetGame={resetGame} isTie={isTie} winner={winner} />
       </div>
     </div>

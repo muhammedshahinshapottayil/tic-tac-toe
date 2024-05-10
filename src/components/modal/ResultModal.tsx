@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Modal from "react-modal";
 import QuitModal from "./QuitModal";
 import { ResultModalProps } from "../../interfaces";
@@ -21,18 +20,9 @@ const customStyles = {
 };
 
 const ResultModal = ({ winner, resetGame, isTie }: ResultModalProps) => {
-  const [modalIsOpen, setIsOpen] = useState<boolean>(
-    winner !== null ? true : isTie
-  );
-
-  const handleModal = () => {
-    setIsOpen((IsOpen) => !IsOpen);
-  };
-
   return (
     <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={handleModal}
+      isOpen={winner !== null ? true : isTie}
       style={customStyles}
       contentLabel="MODAL"
     >

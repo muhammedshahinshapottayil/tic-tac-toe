@@ -67,11 +67,7 @@ function App() {
             </button>
           ))}
         </div>
-        {isTie || winner ? (
-          <ResultModal resetGame={resetGame} isTie={isTie} winner={winner} />
-        ) : (
-          ""
-        )}
+        <ResultModal resetGame={resetGame} isTie={isTie} winner={winner} />
       </div>
     </div>
   );

@@ -51,19 +51,19 @@ function App() {
         </div>
         <h1 className="text-3xl font-bold text-center mb-8">Tic-Tac-Toe</h1>
         <div className="grid grid-cols-3 gap-4">
-          {board.map((cell, index) => (
+          {board.map((value, index) => (
             <button
               key={index}
               className={`w-full h-20 font-bold text-4xl rounded-md transition-colors duration-300 ${
-                cell === "X"
+                value === "X"
                   ? "text-indigo-500 bg-indigo-100"
-                  : cell === "O"
+                  : value === "O"
                   ? "text-purple-500 bg-purple-100"
                   : "text-gray-400 bg-gray-100 hover:bg-gray-200"
               }`}
               onClick={() => handleClick(index)}
             >
-              {cell}
+              {value}
             </button>
           ))}
         </div>

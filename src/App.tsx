@@ -1,15 +1,20 @@
-import { useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
 import { QuitModal, ResultModal } from "./components/modal";
 import { BoardStateType, PlayerStateType } from "./interfaces";
 import { ResetButton } from "./components/button";
 import { getRandomArray, getRandomInt } from "./utils";
 
 function App() {
+  enum Level {
+    easy = "easy",
+    intermediate = "intermediate",
+  }
   const [board, setBoard] = useState<BoardStateType[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStateType>("X");
   const [winner, setWinner] = useState<BoardStateType>(null);
   const [isTie, setIsTie] = useState<boolean>(false);
   const [autoPlay, setAutoPlay] = useState<boolean>(false);
+  const [difficulty, setDifficulty] = useState<Level>(Level.easy);
 
   const winningCombos = useMemo(
     () => [
@@ -26,16 +31,24 @@ function App() {
   );
 
   const autoSelectAction = (index: number): void => {
-    const slotArr = winningCombos.reduce(
-      (prev: number[], comboArr: number[]) => {
+    const slotArrays = winningCombos.reduce(
+      (prev: number[][], comboArr: number[]) => {
         if (comboArr.includes(index)) {
           const availableSlot = comboArr.filter((item) => board[item] === null);
-          if (availableSlot.length > 0) prev = [...prev, ...availableSlot];
+          if (availableSlot.length > 0) prev.push(availableSlot);
         }
         return prev;
       },
       []
     );
+
+    const slotArr =
+      slotArrays.length > 0
+        ? difficulty === Level.intermediate
+          ? slotArrays.sort((a, b) => a.length - b.length)[0]
+          : slotArrays.flat()
+        : [];
+
     const randomArr = getRandomArray(0, 100, getRandomInt(0, 100));
     const randomNo = getRandomInt(0, 100);
     const selectedNo = randomNo % randomArr.length;
@@ -67,11 +80,17 @@ function App() {
     setIsTie(false);
     setWinner(null);
     setAutoPlay(false);
+    setDifficulty(Level.easy);
   };
 
   const handleAutoPlay = (status: boolean) => {
     resetGame();
     setAutoPlay(status);
+  };
+  const handleDifficultyChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    setDifficulty(
+      e.target.value === Level.easy ? e.target.value : Level.intermediate
+    );
   };
 
   return (
@@ -99,16 +118,38 @@ function App() {
           ))}
         </div>
 
-        <div className="mt-3 flex justify-end items-center gap-1 sm:gap-2">
-          <span className="ml-2 text-xs text-gray-600 font-medium sm:text-sm">
-            Auto play
-          </span>
-          <input
-            type="checkbox"
-            checked={autoPlay}
-            onChange={(e) => handleAutoPlay(e.target.checked)}
-            className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out sm:h-5 sm:w-5"
-          />
+        <div className="mt-3 flex flex-col justify-end items-end gap-2 sm:flex-row sm:items-center sm:gap-4">
+          {autoPlay ? (
+            <select
+              onChange={handleDifficultyChange}
+              value={difficulty}
+              className="form-select w-full sm:w-auto pl-3 pr-6 py-1.5 text-sm font-medium text-gray-700 bg-white bg-opacity-50 rounded-md border border-gray-300 transition ease-in-out focus:bg-white focus:border-blue-600 focus:outline-none"
+              style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='currentColor'%3E%3Cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3E%3C/svg%3E")`,
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "right 0.5rem center",
+                backgroundSize: "1em 1em",
+                appearance: "none",
+              }}
+            >
+              <option value={Level.easy}>Easy</option>
+              <option value={Level.intermediate}>Intermediate</option>
+            </select>
+          ) : (
+            ""
+          )}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-600 font-medium sm:text-sm">
+              Auto
+            </span>
+            <input
+              type="checkbox"
+              checked={autoPlay}
+              onChange={(e) => handleAutoPlay(e.target.checked)}
+              className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out sm:h-5 sm:w-5"
+            />
+          </div>
+
           <ResetButton text="Reset" isReset={true} resetGame={resetGame} />
         </div>
 

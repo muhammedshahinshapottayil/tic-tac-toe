@@ -91,6 +91,7 @@ function App() {
     setDifficulty(
       e.target.value === Level.easy ? e.target.value : Level.intermediate
     );
+    setBoard(Array(9).fill(null));
   };
 
   return (

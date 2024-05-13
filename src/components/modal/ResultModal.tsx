@@ -20,7 +20,7 @@ const customStyles = {
   },
 };
 
-const ResultModal = ({ winner, resetGame, isTie }: ResultModalProps) => {
+const ResultModal = ({ winner, restartGame, isTie }: ResultModalProps) => {
   return (
     <Modal
       isOpen={winner !== null ? true : isTie}
@@ -39,7 +39,7 @@ const ResultModal = ({ winner, resetGame, isTie }: ResultModalProps) => {
         <div className="flex justify-center space-x-4">
           <ResetButton
             isReset={false}
-            resetGame={resetGame}
+            handleClick={restartGame}
             text="Play Again"
           />
 

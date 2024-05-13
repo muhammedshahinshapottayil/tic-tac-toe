@@ -8,6 +8,7 @@ function App() {
   enum Level {
     easy = "easy",
     intermediate = "intermediate",
+    hard = "hard",
   }
   const [board, setBoard] = useState<BoardStateType[]>(Array(9).fill(null));
   const [currentPlayer, setCurrentPlayer] = useState<PlayerStateType>("X");
@@ -32,23 +33,47 @@ function App() {
 
   const autoSelectAction = (index: number): void => {
     const slotArrays = winningCombos.reduce(
-      (prev: number[][], comboArr: number[]) => {
+      (
+        prev: { O: number[]; X: number[]; arr: number[][] },
+        comboArr: number[]
+      ) => {
         if (comboArr.includes(index)) {
           const availableSlot = comboArr.filter((item) => board[item] === null);
-          if (availableSlot.length > 0) prev.push(availableSlot);
+          if (availableSlot.length > 0) prev.arr.push(availableSlot);
+        }
+        if (difficulty === Level.hard) {
+          let countX = 0;
+          let countO = 0;
+          let nullIndex: null | number = null;
+          comboArr.forEach((item) => {
+            if (board[item] === null) nullIndex = item;
+            else if (board[item] === "X") countX += 1;
+            else if (board[item] === "O") countO += 1;
+          });
+          if (nullIndex !== null)
+            if (countX == 2) prev.X.push(nullIndex);
+            else if (countO == 2) prev.O.push(nullIndex);
         }
         return prev;
       },
-      []
+      { X: [], O: [], arr: [] }
     );
 
-    const slotArr =
-      slotArrays.length > 0
-        ? difficulty === Level.intermediate
-          ? slotArrays.sort((a, b) => a.length - b.length)[0]
-          : slotArrays.flat()
-        : [];
+    const interMediate = slotArrays.arr.sort((a, b) => a.length - b.length)[0];
+    const hard =
+      slotArrays.X.length > 0
+        ? slotArrays.X
+        : slotArrays.O.length > 0
+        ? slotArrays.O
+        : interMediate;
+    const easy = slotArrays.arr.flat();
 
+    const slotArr =
+      difficulty === Level.hard
+        ? hard
+        : difficulty === Level.intermediate
+        ? interMediate
+        : easy;
     const randomArr = getRandomArray(0, 100, getRandomInt(0, 100));
     const randomNo = getRandomInt(0, 100);
     const selectedNo = randomNo % randomArr.length;
@@ -89,7 +114,11 @@ function App() {
   };
   const handleDifficultyChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setDifficulty(
-      e.target.value === Level.easy ? e.target.value : Level.intermediate
+      e.target.value === Level.easy
+        ? e.target.value
+        : e.target.value === Level.intermediate
+        ? Level.intermediate
+        : Level.hard
     );
     setBoard(Array(9).fill(null));
   };
@@ -135,6 +164,7 @@ function App() {
             >
               <option value={Level.easy}>Easy</option>
               <option value={Level.intermediate}>Intermediate</option>
+              <option value={Level.hard}>Hard</option>
             </select>
           ) : (
             ""

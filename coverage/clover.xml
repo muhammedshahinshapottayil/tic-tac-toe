@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1715941017140" clover="3.2.0">
-  <project timestamp="1715941017140" name="All files">
-    <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1" elements="5" coveredelements="5" complexity="0" loc="2" ncloc="2" packages="1" files="1" classes="1"/>
+<coverage generated="1715954726487" clover="3.2.0">
+  <project timestamp="1715954726487" name="All files">
+    <metrics statements="4" coveredstatements="4" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1" elements="7" coveredelements="7" complexity="0" loc="4" ncloc="4" packages="1" files="2" classes="2"/>
     <file name="ResetButton.tsx" path="C:\Users\muham\Desktop\Study\March\Tasks\tic-tac-toe\src\components\button\ResetButton.tsx">
       <metrics statements="2" coveredstatements="2" conditionals="2" coveredconditionals="2" methods="1" coveredmethods="1"/>
       <line num="4" count="2" type="stmt"/>
       <line num="16" count="1" type="stmt"/>
+    </file>
+    <file name="index.ts" path="C:\Users\muham\Desktop\Study\March\Tasks\tic-tac-toe\src\components\button\index.ts">
+      <metrics statements="2" coveredstatements="2" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
+      <line num="1" count="1" type="stmt"/>
+      <line num="2" count="1" type="stmt"/>
     </file>
   </project>
 </coverage>
